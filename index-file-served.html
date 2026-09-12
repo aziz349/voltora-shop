@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoltoraX - Online Shop</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+    font-family:Arial,sans-serif;
+    background:#f5f6fa;
+    color:#222;
+}
+header{
+    background:#111827;
+    color:white;
+    padding:18px 6%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+.logo{font-size:25px;font-weight:bold}
+.logo span{color:#22c55e}
+.cart{
+    background:#22c55e;
+    padding:10px 18px;
+    border-radius:25px;
+    cursor:pointer;
+}
+.hero{
+    padding:55px 6%;
+    background:linear-gradient(120deg,#111827,#1f2937);
+    color:white;
+}
+.hero h1{font-size:42px;margin-bottom:12px}
+.hero p{color:#d1d5db;margin-bottom:22px}
+.btn{
+    border:0;
+    background:#22c55e;
+    color:white;
+    padding:12px 22px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+.products{
+    padding:35px 6%;
+}
+.products h2{margin-bottom:25px}
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+    gap:20px;
+}
+.card{
+    background:white;
+    border-radius:14px;
+    padding:15px;
+    box-shadow:0 5px 20px #00000012;
+}
+.card img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:10px;
+}
+.card h3{margin:12px 0 7px}
+.price{
+    font-size:20px;
+    font-weight:bold;
+    color:#16a34a;
+    margin-bottom:12px;
+}
+.old{text-decoration:line-through;color:#999;font-size:14px;margin-left:5px}
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0008;
+    z-index:20;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+}
+.box{
+    background:white;
+    width:100%;
+    max-width:500px;
+    max-height:90vh;
+    overflow:auto;
+    padding:25px;
+    border-radius:15px;
+}
+.box h2{margin-bottom:18px}
+input,textarea{
+    width:100%;
+    padding:13px;
+    margin:7px 0;
+    border:1px solid #ddd;
+    border-radius:8px;
+    font-size:15px;
+}
+textarea{height:90px;resize:none}
+.close{
+    float:right;
+    cursor:pointer;
+    font-size:25px;
+}
+.cod{
+    background:#ecfdf5;
+    padding:12px;
+    border-radius:8px;
+    margin:10px 0;
+    color:#166534;
+    font-weight:bold;
+}
+.total{
+    font-size:20px;
+    font-weight:bold;
+    margin:15px 0;
+}
+footer{
+    text-align:center;
+    padding:25px;
+    background:#111827;
+    color:#aaa;
+    margin-top:30px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Voltora<span>X</span></div>
+    <div class="cart" onclick="openCart()">🛒 Cart (<span id="count">0</span>)</div>
+</header>
+
+<section class="hero">
+    <h1>Shop Smart. Live Better.</h1>
+    <p>সেরা পণ্য, সেরা দামে — Cash on Delivery সুবিধাসহ।</p>
+    <button class="btn" onclick="document.getElementById('products').scrollIntoView()">
+        Shop Now
+    </button>
+</section>
+
+<section class="products" id="products">
+    <h2>🔥 জনপ্রিয় পণ্য</h2>
+
+    <div class="grid">
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=600&q=80">
+            <h3>Mini Portable Fan</h3>
+            <div class="price">৳320 <span class="old">৳450</span></div>
+            <button class="btn" onclick="addCart('Mini Portable Fan',320)">Add to Cart</button>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1586953208448-b95a79798f07?auto=format&fit=crop&w=600&q=80">
+            <h3>LED Desk Light</h3>
+            <div class="price">৳499 <span class="old">৳650</span></div>
+            <button class="btn" onclick="addCart('LED Desk Light',499)">Add to Cart</button>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1587033411391-5d9e51cce126?auto=format&fit=crop&w=600&q=80">
+            <h3>Wireless Gadget</h3>
+            <div class="price">৳699 <span class="old">৳900</span></div>
+            <button class="btn" onclick="addCart('Wireless Gadget',699)">Add to Cart</button>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80">
+            <h3>Smart USB Light</h3>
+            <div class="price">৳280 <span class="old">৳350</span></div>
+            <button class="btn" onclick="addCart('Smart USB Light',280)">Add to Cart</button>
+        </div>
+
+    </div>
+</section>
+
+<!-- CART / ORDER -->
+<div class="modal" id="cartModal">
+    <div class="box">
+        <span class="close" onclick="closeCart()">×</span>
+
+        <h2>🛒 Your Order</h2>
+
+        <div id="cartItems">Cart empty</div>
+
+        <div class="total">
+            Total: ৳<span id="total">0</span>
+        </div>
+
+        <h2>📦 Delivery Information</h2>
+
+        <input id="name" placeholder="আপনার নাম">
+        <input id="phone" placeholder="মোবাইল নম্বর">
+        <input id="district" placeholder="জেলা / থানা">
+        <textarea id="address" placeholder="সম্পূর্ণ ঠিকানা"></textarea>
+
+        <div class="cod">
+            💵 Payment Method: Cash on Delivery (COD)
+        </div>
+
+        <button class="btn" style="width:100%" onclick="placeOrder()">
+            ✅ Confirm Order
+        </button>
+    </div>
+</div>
+
+<footer>
+    © 2026 VoltoraX — All Rights Reserved
+</footer>
+
+<script>
+
+let cart=[];
+let total=0;
+
+function addCart(name,price){
+    cart.push({name,price});
+    total += price;
+
+    document.getElementById("count").innerText=cart.length;
+
+    alert(name+" Cart-এ যোগ হয়েছে!");
+}
+
+function openCart(){
+    document.getElementById("cartModal").style.display="flex";
+
+    let html="";
+
+    if(cart.length===0){
+        html="Cart empty";
+    }else{
+        cart.forEach((item,i)=>{
+            html += `
+            <div style="padding:10px 0;border-bottom:1px solid #ddd">
+                ${item.name} — ৳${item.price}
+            </div>`;
+        });
+    }
+
+    document.getElementById("cartItems").innerHTML=html;
+    document.getElementById("total").innerText=total;
+}
+
+function closeCart(){
+    document.getElementById("cartModal").style.display="none";
+}
+
+function placeOrder(){
+
+    let name=document.getElementById("name").value;
+    let phone=document.getElementById("phone").value;
+    let district=document.getElementById("district").value;
+    let address=document.getElementById("address").value;
+
+    if(!name || !phone || !district || !address){
+        alert("দয়া করে সব তথ্য পূরণ করো!");
+        return;
+    }
+
+    if(cart.length===0){
+        alert("আগে একটি Product Cart-এ যোগ করো!");
+        return;
+    }
+
+    alert(
+        "✅ Order সফল হয়েছে!\n\n"+
+        "নাম: "+name+
+        "\nমোবাইল: "+phone+
+        "\nজেলা: "+district+
+        "\nমোট: ৳"+total+
+        "\nPayment: Cash on Delivery"
+    );
+
+    cart=[];
+    total=0;
+    document.getElementById("count").innerText=0;
+
+    closeCart();
+}
+
+</script>
+
+</body>
+</html>
